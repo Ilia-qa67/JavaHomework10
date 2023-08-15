@@ -4,6 +4,24 @@ import org.junit.jupiter.api.Test;
 public class RadioTest {
 
     @Test
+    public void shouldSetSize() {
+        Radio radio = new Radio(25);
+
+        Assertions.assertEquals(0, radio.getMinStation());
+        Assertions.assertEquals(24, radio.getMaxStation());
+        Assertions.assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
+    public void shouldSetDefaultSize() {
+        Radio radio = new Radio();
+
+        Assertions.assertEquals(0, radio.getMinStation());
+        Assertions.assertEquals(9, radio.getMaxStation());
+        Assertions.assertEquals(0, radio.getCurrentStation());
+    }
+
+    @Test
     public void shouldSetStation() {
         Radio radio = new Radio();
 
@@ -19,7 +37,7 @@ public class RadioTest {
     public void shouldNotSetStationLessMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentStation(-10);
+        radio.setCurrentStation(radio.getMinStation() - 1);
 
         int expected = 0;
         int actual = radio.getCurrentStation();
@@ -31,7 +49,7 @@ public class RadioTest {
     public void shouldSetStationAboveMax() {
         Radio radio = new Radio();
 
-        radio.setCurrentStation(10);
+        radio.setCurrentStation(radio.getMaxStation() + 1);
 
         int expected = 0;
         int actual = radio.getCurrentStation();
@@ -56,7 +74,7 @@ public class RadioTest {
     public void shouldSetNextStationIfMax() {
         Radio radio = new Radio();
 
-        radio.setCurrentStation(9);
+        radio.setCurrentStation(radio.getMaxStation());
         radio.nextStation();
 
         int expected = 0;
@@ -82,10 +100,10 @@ public class RadioTest {
     public void shouldSetPrevStationIfMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentStation(0);
+        radio.setCurrentStation(radio.getMinStation());
         radio.prevStation();
 
-        int expected = 9;
+        int expected = radio.getMaxStation();
         int actual = radio.getCurrentStation();
 
         Assertions.assertEquals(expected, actual);
@@ -107,7 +125,7 @@ public class RadioTest {
     public void shouldNotSetCurrentVolumeLessMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentVolume(-10);
+        radio.setCurrentVolume(radio.getMinVolume() - 1);
 
         int expected = 0;
         int actual = radio.getCurrentVolume();
@@ -116,10 +134,10 @@ public class RadioTest {
     }
 
     @Test
-    public void shouldSetCurrentVolumeAboveMax() {
+    public void shouldNotSetCurrentVolumeAboveMax() {
         Radio radio = new Radio();
 
-        radio.setCurrentVolume(150);
+        radio.setCurrentVolume(radio.getMaxVolume() + 1);
 
         int expected = 0;
         int actual = radio.getCurrentVolume();
@@ -144,10 +162,10 @@ public class RadioTest {
     public void shouldNotVolumeUpIfMax() {
         Radio radio = new Radio();
 
-        radio.setCurrentVolume(100);
+        radio.setCurrentVolume(radio.getMaxVolume());
         radio.volumeUp();
 
-        int expected = 100;
+        int expected = radio.getMaxVolume();
         int actual = radio.getCurrentVolume();
 
         Assertions.assertEquals(expected, actual);
@@ -170,10 +188,10 @@ public class RadioTest {
     public void shouldNotVolumeDownIfMin() {
         Radio radio = new Radio();
 
-        radio.setCurrentVolume(0);
+        radio.setCurrentVolume(radio.getMinVolume());
         radio.volumeDown();
 
-        int expected = 0;
+        int expected = radio.getMinVolume();
         int actual = radio.getCurrentVolume();
 
         Assertions.assertEquals(expected, actual);
